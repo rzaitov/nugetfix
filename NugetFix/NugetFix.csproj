@@ -46,10 +46,16 @@
     <Compile Include="PathHelper.cs" />
     <Compile Include="MigrationManager.cs" />
     <Compile Include="MigrationItem.cs" />
-    <Compile Include="PackageInfo.cs" />
+    <Compile Include="Domain\PackageInfo.cs" />
+    <Compile Include="Domain\PackageSettings.cs" />
+    <Compile Include="Domain\Project.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="fix.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\" />
   </ItemGroup>
 </Project>
