@@ -4,7 +4,7 @@ This util will update packages within `iOS/Android/WP/PCL` projects for you. You
 This is not a replacement for Nuget.exe application. This means that util will not manage package's dependency for you. You must explicitly specify which package should be removed and which should be added.
 Also `nugetfix` will not restore packages for you, it just update `csproj` file and `packages.config` properly.
 
-Instructions
+instructions
 ------------
 
 First of all you need understand what you want, then you need translate you wish to `nugetfix`. This means you must specify fix steps to `nugetfix` these steps than will be applied to your project.
@@ -67,7 +67,7 @@ where get migration steps ?
 ---------------------------
 You can migrate some project manually (via XS or VS) and then browse what were changes. Based on this you can build your own `fix.steps` file.
 
-How to run
+how to run
 ----------
 Build the util. Create your `fix.steps` file. Run from command line:  
 ````bash
