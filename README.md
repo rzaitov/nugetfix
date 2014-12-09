@@ -2,13 +2,13 @@ nugetfix
 ========
 This util will update packages within `iOS/Android/WP/PCL` projects for you. You will find it convinient if you need update lots of project from command line.
 This is not a replacement for Nuget.exe application. This means that util will not manage package's dependency for you. You must explicitly specify which package should be removed and which should be added.
-Also `nugetfix` will not restore packages for you, it just update `csproj` file and `packages.config` properly.
+Also `nugetfix` will not restore packages for you, it just update `csproj` file and `packages.config` properly from command line.
 
 instructions
 ------------
 
 First of all you need understand what you want, then you need translate you wish to `nugetfix`. This means you must specify fix steps to `nugetfix` these steps than will be applied to your project.
-Describe fix steps within text file (e.x. `fix.steps`) with simple syntax. `fix.steps` file should contains steps for `csproj` file and for `package.config` files. Here an example. Let's imagine you need to update `Xamarin.Forms` project to version `1.3`:  
+Describe fix steps within text file (e.x. `fix.steps`) with simple syntax. `fix.steps` file should contains steps for `csproj` file and for `package.config` files as well. Here an example. Let's imagine you need to update `Xamarin.Forms` project to version `1.3`:  
 
 ````bash
 [ios csproj]
