@@ -1,6 +1,6 @@
 nugetfix
 ========
-This util will update packages within iOS/Android/Wp/Pcl projects for you. You will find it convinient if you need update lots of project from command line.
+This util will update packages within `iOS/Android/WP/PCL` projects for you. You will find it convinient if you need update lots of project from command line.
 This is not a replacement for Nuget.exe application. This means that util will not manage package's dependency for you. You must explicitly specify which package should be removed and which should be added.
 Also `nugetfix` will not restore packages for you, it just update `csproj` file and `packages.config` properly.
 
