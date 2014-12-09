@@ -37,35 +37,43 @@ namespace NugetFix
 			}
 		}
 
-		public string PathToPackageRepository { get; set; }
-
 		public Project (string csproj)
 		{
 			this.csproj = csproj;
 			xcsproj = XDocument.Load (csproj);
 		}
 
-		public void UpsertPackageReference(PackageSettings settings)
+		public void AddReference(AssemblyReference settings)
+		{
+			if (string.IsNullOrEmpty (settings.Path))
+				AddGlobalReference (settings);
+			else
+				AddLocalReference (settings);
+		}
+
+		public void AddGlobalReference(AssemblyReference settings)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void UpsertLocalReference(AssemblyReference settings)
 		{
 			string ext = Path.GetExtension (settings.Path);
 			AssertTrue (ext == ".dll" || ext == ".exe");
 
 			XElement localReference = FindReference (settings.AssemblyName);
 			if (localReference != null)
-				UpdatePackageReference (localReference, settings.NativePath);
+				UpdateLocalReference (localReference, settings.NativePath);
 			else
-				AddPackageReference (settings.NativePath);
+				AddLocalReference (settings);
 		}
 
-		public void DeletePackageReference(PackageSettings settings)
+		public void DeleteAssemblyReference(AssemblyReference settings)
 		{
-			string ext = Path.GetExtension (settings.Path);
-			AssertTrue (ext == ".dll" || ext == ".exe");
-
-			DeletePackageReference (settings.AssemblyName);
+			DeleteAssemblyReference (settings.AssemblyName);
 		}
 
-		public void DeletePackageReference(string assemblyName)
+		public void DeleteAssemblyReference(string assemblyName)
 		{
 			var refToDelete = FindReference (assemblyName);
 			if(refToDelete != null)
@@ -88,25 +96,19 @@ namespace NugetFix
 			return itemGroup.Element (ReferenceXName) != null;
 		}
 
-		void UpdatePackageReference(XElement localReference, string nativePackagePath)
+		void UpdateLocalReference(XElement localReference, string pathToAsm)
 		{
 			var hitPathElem = localReference.Element (HintPathXName);
-			hitPathElem.Value = BuildHintPath (nativePackagePath);
+			hitPathElem.Value = PathHelper.ConvertToWindowsPath (pathToAsm);
 		}
 
-		void AddPackageReference(string nativePackagePath)
+		void AddLocalReference(AssemblyReference settings)
 		{
-			var hintPathElement = new XElement (HintPathXName, BuildHintPath (nativePackagePath));
+			var hintPathElement = new XElement (HintPathXName, settings.PathWindows);
 			XElement reference = new XElement (ReferenceXName, hintPathElement);
-			reference.Add (new XAttribute (IncludeXName, Path.GetFileNameWithoutExtension (nativePackagePath)));
+			reference.Add (new XAttribute (IncludeXName, Path.GetFileNameWithoutExtension (settings.NativePath)));
 
 			ItemGroupWithReferences.Add (reference);
-		}
-
-		string BuildHintPath(string nativePackagePath)
-		{
-			string pathToAssembly = Path.Combine (PathToPackageRepository, nativePackagePath);
-			return PathHelper.ConvertToWindowsPath (pathToAssembly);
 		}
 
 		public void Save()

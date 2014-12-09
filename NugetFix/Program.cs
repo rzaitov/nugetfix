@@ -14,12 +14,10 @@ namespace NugetFix
 		public static void Main (string[] args)
 		{
 			string csproj = "/Users/rzaitov/Documents//Apps/A_Xamarin/xamarin-forms-book-preview/Chapter02/TwoButtons/TwoButtons/TwoButtons.Android/TwoButtons.Android.csproj";
-			var project = new Project (csproj) {
-				PathToPackageRepository = "../../packages"
-			};
+			var project = new Project (csproj);
 
-			project.UpsertPackageReference (new PackageSettings { Path = "Xamarin.AAA.Support.v13.20.0.0.4\\libAAA\\MonoAndroidAAA\\Xamarin.Android.Support.v16.dll" });
-			project.DeletePackageReference (new PackageSettings { Path = "Xamarin.Forms.Core.dll" });
+			project.UpsertLocalReference (AssemblyReference.CreateFromPath ("..\\..\\packages\\Xamarin.AAA.Support.v13.20.0.0.4\\libAAA\\MonoAndroidAAA\\Xamarin.Android.Support.v16.dll" ));
+			project.DeleteAssemblyReference (AssemblyReference.CreateFromPath ("Xamarin.Forms.Core.dll"));
 			project.Save ();
 
 			/*

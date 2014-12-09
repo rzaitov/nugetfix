@@ -47,8 +47,8 @@
     <Compile Include="MigrationManager.cs" />
     <Compile Include="MigrationItem.cs" />
     <Compile Include="Domain\PackageInfo.cs" />
-    <Compile Include="Domain\PackageSettings.cs" />
     <Compile Include="Domain\Project.cs" />
+    <Compile Include="Domain\AssemblyReference.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

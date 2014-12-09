@@ -44,12 +44,12 @@ namespace NugetFix
 
 		public static string ConvertToNativePath(string path)
 		{
-			return path.Replace ('\\', Path.DirectorySeparatorChar);
+			return path != null ? path.Replace ('\\', Path.DirectorySeparatorChar) : null;
 		}
 
 		public static string ConvertToWindowsPath(string path)
 		{
-			return path.Replace (Path.DirectorySeparatorChar, '\\');
+			return path != null ? path.Replace (Path.DirectorySeparatorChar, '\\') : null;
 		}
 	}
 }
