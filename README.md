@@ -19,7 +19,13 @@ update "Xamarin.Forms.1.3\build\portable-win+net45+wp80+Xamarin.iOS10\Xamarin.Fo
 update "Xamarin.Forms" version="1.3" targetFramework="xamarinios10"
 ```
 
-The typical `fix.steps` file will looks like this:
+This file contains instuctions for updating csproj file for iOS app and instuctions for patching packages.config file which locates in csproj's file folder.
+In csproj file you can fix assembly references and targets files.
+In packages.config you can fix any package.
+You will find explanation below.
+
+
+The typical `fix.steps` file for some cross-platform project will looks like this:
 ````
 [ios csproj]
 // here you should put migration steps for your iPhoneApp.csproj
@@ -38,6 +44,17 @@ The typical `fix.steps` file will looks like this:
 
 [wp packages.config]
 // here you should put migration steps for package.config file
-
-
 ````
+
+fix.steps syntax
+----------------
+Any step starts with either `update` or `delete` work:  
+`update "path/to/new/version/assembly.dll"` – specify path to new assembly version  
+`update "path/to/new.targets"`
+`delete "assembly"` – assembly is the assembly name (file without extension)
+
+The same rule for patching `packages.config` file:  
+`update "packageId" version="newVersionString" targetFramework="specifyFrameworkHere"`  
+`delete "packageId"`
+
+
