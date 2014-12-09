@@ -13,6 +13,13 @@ namespace NugetFix
 
 		public static void Main (string[] args)
 		{
+			var p = new Parser ("fix.txt");
+			p.Parse ();
+			foreach (PatchDescription d in p.Descriptions) {
+				Console.WriteLine (d);
+			}
+
+			/*
 			string csproj = "/Users/rzaitov/Documents//Apps/A_Xamarin/xamarin-forms-book-preview/Chapter02/TwoButtons/TwoButtons/TwoButtons.Android/TwoButtons.Android.csproj";
 			var project = new Project (csproj);
 
@@ -21,6 +28,7 @@ namespace NugetFix
 			string path = "..\\..\\packages\\Xamarin.Forms.1.2.3.6257\\build\\portable-win+net45+wp80+MonoAndroid10+MonoTouch10\\Xamarin.Forms.targets";
 			project.RemoveImportByPath (new ImportReference { Path = path, Condition = string.Format("Exists('{0}')", path) });
 			project.Save ();
+			*/
 
 			/*
 			string pathToSln = "/Users/rzaitov/Documents//Apps/A_Xamarin/xamarin-forms-book-preview/Chapter02/TwoButtons/TwoButtons.sln";
