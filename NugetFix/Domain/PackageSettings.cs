@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 namespace NugetFix
 {
@@ -24,8 +23,14 @@ namespace NugetFix
 
 		public string AssemblyName {
 			get {
-				var nativePackagePath = PathHelper.ConvertToNativePath (Path);
-				return System.IO.Path.GetFileNameWithoutExtension (nativePackagePath);
+				var ext = System.IO.Path.GetExtension (Path);
+
+				if (ext == ".exe" || ext == ".dll") {
+					var nativePackagePath = PathHelper.ConvertToNativePath (Path);
+					return System.IO.Path.GetFileNameWithoutExtension (nativePackagePath);
+				} else {
+					return Path;
+				}
 			}
 		}
 	}

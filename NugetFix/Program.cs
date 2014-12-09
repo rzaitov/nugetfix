@@ -19,6 +19,7 @@ namespace NugetFix
 			};
 
 			project.UpsertPackageReference (new PackageSettings { Path = "Xamarin.AAA.Support.v13.20.0.0.4\\libAAA\\MonoAndroidAAA\\Xamarin.Android.Support.v16.dll" });
+			project.DeletePackageReference (new PackageSettings { Path = "Xamarin.Forms.Core.dll" });
 			project.Save ();
 
 			/*

@@ -48,13 +48,28 @@ namespace NugetFix
 		public void UpsertPackageReference(PackageSettings settings)
 		{
 			string ext = Path.GetExtension (settings.Path);
-			AssertTrue (ext == "dll" || ext == "exe");
+			AssertTrue (ext == ".dll" || ext == ".exe");
 
 			XElement localReference = FindReference (settings.AssemblyName);
 			if (localReference != null)
 				UpdatePackageReference (localReference, settings.NativePath);
 			else
 				AddPackageReference (settings.NativePath);
+		}
+
+		public void DeletePackageReference(PackageSettings settings)
+		{
+			string ext = Path.GetExtension (settings.Path);
+			AssertTrue (ext == ".dll" || ext == ".exe");
+
+			DeletePackageReference (settings.AssemblyName);
+		}
+
+		public void DeletePackageReference(string assemblyName)
+		{
+			var refToDelete = FindReference (assemblyName);
+			if(refToDelete != null)
+				refToDelete.Remove ();
 		}
 
 		XElement FindReference(string assemblyName)
@@ -108,7 +123,8 @@ namespace NugetFix
 
 		void AssertTrue(bool condition)
 		{
-
+			if (!condition)
+				throw new InvalidProgramException ();
 		}
 	}
 }
