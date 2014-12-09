@@ -65,7 +65,7 @@ Here you can browse real-life [fix.step](https://github.com/rzaitov/nugetfix/blo
 
 where get migration steps ?
 ---------------------------
-You can migrate some project manually (via XS or VS) and then browse what were changes. Based on this you can build your own `fix.steps` file.
+You can migrate some project manually (via XS or VS) and then browse what were changed. Based on this you can build your own `fix.steps` file.
 
 how to run
 ----------
