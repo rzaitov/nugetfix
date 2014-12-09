@@ -61,4 +61,8 @@ update "packageId" version="newVersionString" targetFramework="specifyFrameworkH
 delete "packageId"
 ```
 
+Here you can browse real-life fix.step file
 
+where get migration steps ?
+---------------------------
+You can migrate some project manually (via XS or VS) and then browse what were changes. Based on this you can build your own fix.step file.
