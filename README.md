@@ -61,7 +61,7 @@ update "packageId" version="newVersionString" targetFramework="specifyFrameworkH
 delete "packageId"
 ```
 
-Here you can browse real-life fix.step file
+Here you can browse real-life [fix.step](https://github.com/rzaitov/nugetfix/blob/master/NugetFix/fix.steps) file
 
 where get migration steps ?
 ---------------------------
