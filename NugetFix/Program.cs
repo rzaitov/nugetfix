@@ -13,11 +13,18 @@ namespace NugetFix
 
 		public static void Main (string[] args)
 		{
+			string csproj = args [0];
+			Project p = new Project (csproj);
+			ProjectTypeFinder ptf = new ProjectTypeFinder ();
+			Console.WriteLine ("{0}, {1}", ptf.FetchType (p), csproj);
+
+			/*
 			var p = new Parser ("fix.txt");
 			p.Parse ();
 			foreach (PatchDescription d in p.Descriptions) {
 				Console.WriteLine (d);
 			}
+			*/
 
 			/*
 			string csproj = "/Users/rzaitov/Documents//Apps/A_Xamarin/xamarin-forms-book-preview/Chapter02/TwoButtons/TwoButtons/TwoButtons.Android/TwoButtons.Android.csproj";

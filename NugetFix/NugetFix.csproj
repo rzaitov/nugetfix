@@ -52,6 +52,7 @@
     <Compile Include="Domain\ImportReference.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\PatchDescription.cs" />
+    <Compile Include="Domain\ProjectTypeFinder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

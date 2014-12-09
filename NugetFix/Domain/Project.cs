@@ -16,6 +16,7 @@ namespace NugetFix
 		static readonly XName HintPathXName = XName.Get ("HintPath", ns);
 		static readonly XName ItemGroupXName = XName.Get ("ItemGroup", ns);
 		static readonly XName ImportXName = XName.Get ("Import", ns);
+		static readonly XName ProjectTypeGuidsXName = XName.Get ("ProjectTypeGuids", ns);
 
 		static readonly XName IncludeXName = XName.Get ("Include");
 		static readonly XName ProjectXName = XName.Get ("Project");
@@ -185,6 +186,16 @@ namespace NugetFix
 		XAttribute BuildCondition(ImportReference reference)
 		{
 			return new XAttribute (ConditionXName, reference.Condition);
+		}
+
+		#endregion
+
+		#region Project GUIDS
+
+		public string GetProjectGuids()
+		{
+			var projectGuildElement = xcsproj.Root.Descendants (ProjectTypeGuidsXName).First ();
+			return projectGuildElement.Value;
 		}
 
 		#endregion
