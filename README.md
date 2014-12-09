@@ -65,4 +65,12 @@ Here you can browse real-life fix.step file
 
 where get migration steps ?
 ---------------------------
-You can migrate some project manually (via XS or VS) and then browse what were changes. Based on this you can build your own fix.step file.
+You can migrate some project manually (via XS or VS) and then browse what were changes. Based on this you can build your own `fix.steps` file.
+
+How to run
+----------
+Build the util. Create your `fix.steps` file. Run from command line:  
+````bash
+cd path/to/your/repository
+mono path/to/NugetFix.exe paht/to/SolutionFile.sln  path/to/fix.steps
+```
