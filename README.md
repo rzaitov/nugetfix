@@ -71,6 +71,11 @@ How to run
 ----------
 Build the util. Create your `fix.steps` file. Run from command line:  
 ````bash
-cd "path/to/your/repository"
-mono "path/to/NugetFix.exe" "paht/to/SolutionFile.sln"  "path/to/fix.steps"
+cd path/to/your/repository
+mono path/to/NugetFix.exe paht/to/SolutionFile.sln  path/to/fix.steps
+```
+
+You can run `nugetfix` on multiple projects via `xarg` util:  
+```bash
+find . -name "*sln" -type f -print0 | xargs -0 -L 1 -J {} mono path/to/Nuget.exe {} path/to/fix.steps
 ```
