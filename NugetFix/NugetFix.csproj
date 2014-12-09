@@ -53,6 +53,8 @@
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\PatchDescription.cs" />
     <Compile Include="Domain\ProjectTypeFinder.cs" />
+    <Compile Include="Domain\Package.cs" />
+    <Compile Include="Domain\XmlWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

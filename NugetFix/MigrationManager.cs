@@ -9,16 +9,16 @@ namespace NugetFix
 	public class MigrationManager
 	{
 		PathHelper pathHelper;
-		string slnDirectory;
-		string packageFolder;
+//		string slnDirectory;
+//		string packageFolder;
 
 		Dictionary<Type, PatchDescription> patchMap;
 
 		public MigrationManager (string pathToSln, IEnumerable<PatchDescription> patch)
 		{
 			pathHelper = new PathHelper (pathToSln);
-			slnDirectory = Path.GetDirectoryName (pathToSln);
-			packageFolder = Path.Combine (slnDirectory, "package");
+//			slnDirectory = Path.GetDirectoryName (pathToSln);
+//			packageFolder = Path.Combine (slnDirectory, "package");
 
 			patchMap = new Dictionary<Type, PatchDescription> ();
 			foreach (PatchDescription p in patch)
@@ -47,6 +47,8 @@ namespace NugetFix
 		void Migrate(MigrationItem migrateItem)
 		{
 			Project project = new Project (migrateItem.CsprojPath);
+			Package package = new Package (migrateItem.ConfigPath);
+
 			ProjectTypeFinder ptf = new ProjectTypeFinder ();
 			ProjectType projectType = ptf.FetchType (project);
 
@@ -59,10 +61,10 @@ namespace NugetFix
 				return;
 
 			PatchProject (project, projectPatch);
-			PatchPackage (packagePatch);
+			PatchPackage (package, packagePatch);
 
 			project.Save ();
-			// package.Save();
+			package.Save();
 		}
 
 		void PatchProject(Project project, PatchDescription patch)
@@ -96,9 +98,26 @@ namespace NugetFix
 			}
 		}
 
-		void PatchPackage(PatchDescription patch)
+		void PatchPackage(Package package, PatchDescription patch)
 		{
+			foreach (var cmd in patch.Commands) {
+				switch (cmd.CommandType) {
+					case CommandType.Update:
+						package.UpsertPackage (new PackageInfo {
+							Id = cmd.Name,
+							Version = cmd.Version,
+							TargetFramework = cmd.TargetFramework
+						});
+						break;
 
+					case CommandType.Delete:
+						package.RemovePackageById (new PackageInfo{ Id = cmd.Name });
+						break;
+
+					default:
+						throw new NotImplementedException ();
+			}
+			}
 		}
 
 		PatchDescription FindProjectPatch(ProjectType projectType)

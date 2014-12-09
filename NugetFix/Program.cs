@@ -9,8 +9,6 @@ namespace NugetFix
 {
 	class MainClass
 	{
-		static string packageId = "Xamarin.Forms";
-
 		public static void Main (string[] args)
 		{
 			string sln = args [0];

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace NugetFix
 {
-	public class Project
+	public class Project : XmlWrapper
 	{
 		const string ns = "http://schemas.microsoft.com/developer/msbuild/2003";
 
@@ -22,8 +22,6 @@ namespace NugetFix
 		static readonly XName ProjectXName = XName.Get ("Project");
 		static readonly XName ConditionXName = XName.Get ("Condition");
 
-		readonly XDocument xcsproj;
-		readonly string csproj;
 
 		XElement itemGroupWithReferences;
 		XElement ItemGroupWithReferences {
@@ -42,9 +40,8 @@ namespace NugetFix
 		}
 
 		public Project (string csproj)
+			: base(csproj)
 		{
-			this.csproj = csproj;
-			xcsproj = XDocument.Load (csproj);
 		}
 
 		#region References
@@ -64,7 +61,7 @@ namespace NugetFix
 
 		public void UpsertLocalReference(AssemblyReference settings)
 		{
-			string ext = Path.GetExtension (settings.Path);
+			string ext = System.IO.Path.GetExtension (settings.Path);
 			AssertTrue (ext == ".dll" || ext == ".exe");
 
 			XElement localReference = FindReference (settings.AssemblyName);
@@ -93,7 +90,7 @@ namespace NugetFix
 
 		XElement GetItemGroupWithRefs()
 		{
-			var itemGroups = xcsproj.Root.Elements (ItemGroupXName);
+			var itemGroups = Document.Root.Elements (ItemGroupXName);
 			return itemGroups.FirstOrDefault (ContainsAnyReferenceElement);
 		}
 
@@ -112,7 +109,7 @@ namespace NugetFix
 		{
 			var hintPathElement = new XElement (HintPathXName, settings.PathWindows);
 			XElement reference = new XElement (ReferenceXName, hintPathElement);
-			reference.Add (new XAttribute (IncludeXName, Path.GetFileNameWithoutExtension (settings.NativePath)));
+			reference.Add (new XAttribute (IncludeXName, System.IO.Path.GetFileNameWithoutExtension (settings.NativePath)));
 
 			ItemGroupWithReferences.Add (reference);
 		}
@@ -146,14 +143,14 @@ namespace NugetFix
 
 		XElement FindImportByName(string importFileName)
 		{
-			IEnumerable<XElement> imports = xcsproj.Root.Elements (ImportXName);
+			IEnumerable<XElement> imports = Document.Root.Elements (ImportXName);
 			var result = imports.Where (i => i.Attribute (ProjectXName).Value.EndsWith (importFileName));
 			return result.FirstOrDefault ();
 		}
 
 		XElement FindImportByPath(string path)
 		{
-			var imports = xcsproj.Root.Elements (ImportXName);
+			var imports = Document.Root.Elements (ImportXName);
 			var result = imports.Where (i => i.Attribute (ProjectXName).Value == path);
 			return result.FirstOrDefault ();
 		}
@@ -166,7 +163,7 @@ namespace NugetFix
 			if (reference.Condition != null)
 				importElement.Add (BuildCondition(reference));
 
-			xcsproj.Root.Add (importElement);
+			Document.Root.Add (importElement);
 		}
 
 		void UpdateImport(XElement importElement, ImportReference reference)
@@ -194,29 +191,11 @@ namespace NugetFix
 
 		public string GetProjectGuids()
 		{
-			var projectGuildElement = xcsproj.Root.Descendants (ProjectTypeGuidsXName).First ();
+			var projectGuildElement = Document.Root.Descendants (ProjectTypeGuidsXName).First ();
 			return projectGuildElement.Value;
 		}
 
 		#endregion
-
-		public void Save()
-		{
-			var ws = new XmlWriterSettings ();
-			ws.Indent = true;
-			ws.IndentChars = "  ";
-			ws.NewLineChars = Environment.NewLine;
-			ws.Encoding = new UTF8Encoding (true);
-
-			using (XmlWriter writer = XmlWriter.Create (csproj, ws))
-				xcsproj.Save (writer);
-		}
-
-		void AssertTrue(bool condition)
-		{
-			if (!condition)
-				throw new InvalidProgramException ();
-		}
 	}
 }
 
