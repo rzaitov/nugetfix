@@ -10,7 +10,7 @@ Instructions
 First of all you need understand what you want, then you need translate you wish to `nugetfix`. This means you must specify fix steps to `nugetfix` these steps than will be applied to your project.
 Describe fix steps within text file (e.x. `fix.steps`) with simple syntax. `fix.steps` file should contains steps for `csproj` file and for `package.config` files. Here an example. Let's imagine you need to update `Xamarin.Forms` project to version `1.3`:  
 
-````
+````bash
 [ios csproj]
 update "Xamarin.Forms.1.3\lib\Xamarin.iOS10\Xamarin.Forms.Core.dll"
 update "Xamarin.Forms.1.3\build\portable-win+net45+wp80+Xamarin.iOS10\Xamarin.Forms.targets"
@@ -26,35 +26,39 @@ You will find explanation below.
 
 
 The typical `fix.steps` file for some cross-platform project will looks like this:
-````
+````bash
 [ios csproj]
-// here you should put migration steps for your iPhoneApp.csproj
+# here you should put migration steps for your iPhoneApp.csproj
 
 [ios packages.config]
-// here you should put migration steps for package.config file
+# here you should put migration steps for package.config file
 
 [android csproj]
-// here you should put migration steps for your AndroidApp.csproj
+# here you should put migration steps for your AndroidApp.csproj
 
 [android packages.config]
-// here you should put migration steps for package.config file
+# here you should put migration steps for package.config file
 
 [wp csproj]
-// here you should put migration steps for your WindowsPhoneApp.csproj
+# here you should put migration steps for your WindowsPhoneApp.csproj
 
 [wp packages.config]
-// here you should put migration steps for package.config file
+# here you should put migration steps for package.config file
 ````
 
 fix.steps syntax
 ----------------
 Any step starts with either `update` or `delete` work:  
-`update "path/to/new/version/assembly.dll"` – specify path to new assembly version  
-`update "path/to/new.targets"`
-`delete "assembly"` – assembly is the assembly name (file without extension)
+```bash
+update "path/to/new/version/assembly.dll" # specify path to new assembly version
+update "path/to/new.targets"
+delete "assembly" # assembly is the assembly name (file without extension)
+```
 
 The same rule for patching `packages.config` file:  
-`update "packageId" version="newVersionString" targetFramework="specifyFrameworkHere"`  
-`delete "packageId"`
+```bash
+update "packageId" version="newVersionString" targetFramework="specifyFrameworkHere"  
+delete "packageId"
+```
 
 
