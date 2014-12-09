@@ -66,6 +66,10 @@ namespace NugetFix
 						description.ProjectType = Type.WpProject;
 						break;
 
+					case "shared":
+						description.ProjectType = Type.SharedProject;
+						break;
+
 					default:
 						throw new InvalidProgramException ();
 				}
@@ -83,6 +87,11 @@ namespace NugetFix
 					case "wp":
 						description.ProjectType = Type.WpConfig;
 						break;
+
+					case "shared":
+						description.ProjectType = Type.SharedConfig;
+						break;
+
 
 					default:
 						throw new InvalidProgramException ();

@@ -13,10 +13,20 @@ namespace NugetFix
 
 		public static void Main (string[] args)
 		{
+			string sln = args [0];
+			string tasks = args [1];
+
+			var p = new Parser (tasks);
+			p.Parse ();
+			MigrationManager mm = new MigrationManager (sln, p.Descriptions);
+			mm.Migrate ();
+
+			/*
 			string csproj = args [0];
 			Project p = new Project (csproj);
 			ProjectTypeFinder ptf = new ProjectTypeFinder ();
 			Console.WriteLine ("{0}, {1}", ptf.FetchType (p), csproj);
+			*/
 
 			/*
 			var p = new Parser ("fix.txt");

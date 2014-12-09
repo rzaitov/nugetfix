@@ -37,7 +37,6 @@ namespace NugetFix
 			int lCommaIndex = projectLine.LastIndexOf (',');
 
 			string projectPath = projectLine.Substring (fCommaIndex + 1, lCommaIndex - fCommaIndex - 1);
-			Console.WriteLine (projectPath);
 			projectPath = ConvertToNativePath (projectPath.Trim ().Replace ("\"", string.Empty));
 			return projectPath;
 		}

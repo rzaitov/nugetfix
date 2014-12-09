@@ -1,22 +1,31 @@
 ﻿[ios csproj]
-update "Xamarin.Forms.1.2.3.6257\lib\MonoTouch10\Xamarin.Forms.Core.dll"
-update "Xamarin.Forms.1.2.3.6257\lib\MonoTouch10\Xamarin.Forms.Platform.iOS.dll"
-update "Xamarin.Forms.1.2.3.6257\lib\MonoTouch10\Xamarin.Forms.Xaml.dll"
-update "Xamarin.Forms.1.2.3.6257\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10\Xamarin.Forms.targets"
-delete "Xamarin.Forms.targets"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\Xamarin.iOS10\Xamarin.Forms.Core.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\Xamarin.iOS10\Xamarin.Forms.Platform.iOS.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\Xamarin.iOS10\Xamarin.Forms.Core.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\Xamarin.iOS10\Xamarin.Forms.Xaml.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets"
 
 [ios packages.config]
 update "Xamarin.Forms" version="1.2.3.6257" targetFramework="MonoTouch10"
 
 [android csproj]
-delete "Xamarin.Android.Support.v13.dll"
-update "Xamarin.Android.Support.v4.20.0.0.4\lib\MonoAndroid32\Xamarin.Android.Support.v4.dll"
-update "Xamarin.Forms.1.2.3.6257\lib\MonoAndroid10\Xamarin.Forms.Core.dll"
-update "Xamarin.Forms.1.2.3.6257\lib\MonoAndroid10\Xamarin.Forms.Platform.Android.dll"
-update "Xamarin.Forms.1.2.3.6257\lib\MonoAndroid10\Xamarin.Forms.Xaml.dll"
+delete "Xamarin.Android.Support.v13"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\MonoAndroid10\FormsViewGroup.dll"
+update "..\..\packages\Xamarin.Android.Support.v4.19.1.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\MonoAndroid10\Xamarin.Forms.Core.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\MonoAndroid10\Xamarin.Forms.Platform.Android.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\MonoAndroid10\Xamarin.Forms.Xaml.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets"
 
 [android packages.config]
 delete "Xamarin.Android.Support.v13"
 update "Xamarin.Android.Support.v4" version="20.0.0.4" targetFramework="MonoAndroid44"
 update "Xamarin.Forms" version="1.2.3.6257" targetFramework="MonoAndroid44"
 
+[shared csproj]
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.Core.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\lib\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.Xaml.dll"
+update "..\..\packages\Xamarin.Forms.1.3.0.6275-pre1\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets"
+
+[shared packages.config]
+update "Xamarin.Forms" version="1.2.3.6257" targetFramework="MonoTouch10"
