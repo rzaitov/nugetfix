@@ -71,6 +71,6 @@ How to run
 ----------
 Build the util. Create your `fix.steps` file. Run from command line:  
 ````bash
-cd path/to/your/repository
-mono path/to/NugetFix.exe paht/to/SolutionFile.sln  path/to/fix.steps
+cd "path/to/your/repository"
+mono "path/to/NugetFix.exe" "paht/to/SolutionFile.sln"  "path/to/fix.steps"
 ```
