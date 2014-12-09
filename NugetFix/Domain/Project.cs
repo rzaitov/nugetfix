@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using System.Linq;
 using System.Xml;
 using System.Text;
+using System.Collections.Generic;
 
 namespace NugetFix
 {
@@ -13,10 +14,30 @@ namespace NugetFix
 
 		static readonly XName ReferenceXName = XName.Get ("Reference", ns);
 		static readonly XName HintPathXName = XName.Get ("HintPath", ns);
+		static readonly XName ItemGroupXName = XName.Get ("ItemGroup", ns);
+
 		static readonly XName IncludeXName = XName.Get ("Include");
 
 		readonly XDocument xcsproj;
 		readonly string csproj;
+
+		XElement itemGroupWithReferences;
+		XElement ItemGroupWithReferences {
+			get {
+				if (itemGroupWithReferences == null)
+					itemGroupWithReferences = GetItemGroupWithRefs ();
+
+				return itemGroupWithReferences;
+			}
+		}
+
+		IEnumerable<XElement> References {
+			get {
+				return ItemGroupWithReferences.Elements (ReferenceXName);
+			}
+		}
+
+		public string PathToPackageRepository { get; set; }
 
 		public Project (string csproj)
 		{
@@ -24,44 +45,53 @@ namespace NugetFix
 			xcsproj = XDocument.Load (csproj);
 		}
 
-		public void UpsertReference(PackageSettings settings)
+		public void UpsertPackageReference(PackageSettings settings)
 		{
 			string ext = Path.GetExtension (settings.Path);
 			AssertTrue (ext == "dll" || ext == "exe");
 
-			var nativeSettingPath = ConvertToNativePath (settings.Path);
-			string refname = Path.GetFileNameWithoutExtension (nativeSettingPath);
-			var references = xcsproj.Descendants (ReferenceXName);
-
-			var refToUpdate = references.First (r => r.Attribute (IncludeXName).Value == refname);
-
-			var hitPathElem = refToUpdate.Element (HintPathXName);
-			var windowsPath = hitPathElem.Value;
-
-			string packageFolder = GetPathToPackageFolder (ConvertToNativePath (windowsPath));
-			string pathToAssembly = Path.Combine (packageFolder, nativeSettingPath);
-			pathToAssembly = ConvertToWindowsPath (pathToAssembly);
-
-			hitPathElem.Value = pathToAssembly;
+			XElement localReference = FindReference (settings.AssemblyName);
+			if (localReference != null)
+				UpdatePackageReference (localReference, settings.NativePath);
+			else
+				AddPackageReference (settings.NativePath);
 		}
 
-		string GetPathToPackageFolder(string pathToAssembly)
+		XElement FindReference(string assemblyName)
 		{
-			string packageFolder = pathToAssembly;
-			while (!packageFolder.EndsWith ("packages"))
-				packageFolder = Path.GetDirectoryName (packageFolder);
-
-			return packageFolder;
+			return References.FirstOrDefault (r => r.Attribute (IncludeXName).Value == assemblyName);
 		}
 
-		string ConvertToNativePath(string path)
+		XElement GetItemGroupWithRefs()
 		{
-			return path.Replace ('\\', Path.DirectorySeparatorChar);
+			var itemGroups = xcsproj.Root.Elements (ItemGroupXName);
+			return itemGroups.FirstOrDefault (ContainsAnyReferenceElement);
 		}
 
-		string ConvertToWindowsPath(string path)
+		bool ContainsAnyReferenceElement(XElement itemGroup)
 		{
-			return path.Replace (Path.DirectorySeparatorChar, '\\');
+			return itemGroup.Element (ReferenceXName) != null;
+		}
+
+		void UpdatePackageReference(XElement localReference, string nativePackagePath)
+		{
+			var hitPathElem = localReference.Element (HintPathXName);
+			hitPathElem.Value = BuildHintPath (nativePackagePath);
+		}
+
+		void AddPackageReference(string nativePackagePath)
+		{
+			var hintPathElement = new XElement (HintPathXName, BuildHintPath (nativePackagePath));
+			XElement reference = new XElement (ReferenceXName, hintPathElement);
+			reference.Add (new XAttribute (IncludeXName, Path.GetFileNameWithoutExtension (nativePackagePath)));
+
+			ItemGroupWithReferences.Add (reference);
+		}
+
+		string BuildHintPath(string nativePackagePath)
+		{
+			string pathToAssembly = Path.Combine (PathToPackageRepository, nativePackagePath);
+			return PathHelper.ConvertToWindowsPath (pathToAssembly);
 		}
 
 		public void Save()

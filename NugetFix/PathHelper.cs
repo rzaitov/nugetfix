@@ -38,8 +38,18 @@ namespace NugetFix
 
 			string projectPath = projectLine.Substring (fCommaIndex + 1, lCommaIndex - fCommaIndex - 1);
 			Console.WriteLine (projectPath);
-			projectPath = projectPath.Trim ().Replace ("\"", string.Empty).Replace ('\\', '/');
+			projectPath = ConvertToNativePath (projectPath.Trim ().Replace ("\"", string.Empty));
 			return projectPath;
+		}
+
+		public static string ConvertToNativePath(string path)
+		{
+			return path.Replace ('\\', Path.DirectorySeparatorChar);
+		}
+
+		public static string ConvertToWindowsPath(string path)
+		{
+			return path.Replace (Path.DirectorySeparatorChar, '\\');
 		}
 	}
 }
