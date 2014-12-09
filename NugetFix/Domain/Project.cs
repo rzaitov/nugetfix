@@ -54,21 +54,21 @@ namespace NugetFix
 				AddLocalReference (settings);
 		}
 
-		public void AddGlobalReference(AssemblyReference settings)
+		public void AddGlobalReference(AssemblyReference asmRef)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public void UpsertLocalReference(AssemblyReference settings)
+		public void UpsertLocalReference(AssemblyReference asmRef)
 		{
-			string ext = System.IO.Path.GetExtension (settings.Path);
+			string ext = System.IO.Path.GetExtension (asmRef.Path);
 			AssertTrue (ext == ".dll" || ext == ".exe");
 
-			XElement localReference = FindReference (settings.AssemblyName);
+			XElement localReference = FindReference (asmRef.AssemblyName);
 			if (localReference != null)
-				UpdateLocalReference (localReference, settings.NativePath);
+				UpdateLocalReference (localReference, asmRef);
 			else
-				AddLocalReference (settings);
+				AddLocalReference (asmRef);
 		}
 
 		public void DeleteAssemblyReference(AssemblyReference settings)
@@ -85,7 +85,7 @@ namespace NugetFix
 
 		XElement FindReference(string assemblyName)
 		{
-			return References.FirstOrDefault (r => r.Attribute (IncludeXName).Value == assemblyName);
+			return References.FirstOrDefault (r => r.Attribute (IncludeXName).Value.Contains(assemblyName));
 		}
 
 		XElement GetItemGroupWithRefs()
@@ -99,10 +99,16 @@ namespace NugetFix
 			return itemGroup.Element (ReferenceXName) != null;
 		}
 
-		void UpdateLocalReference(XElement localReference, string pathToAsm)
+		void UpdateLocalReference(XElement localReference, AssemblyReference asmRef)
 		{
+			localReference.Attribute (IncludeXName).Value = asmRef.AssemblyName;
+
 			var hitPathElem = localReference.Element (HintPathXName);
-			hitPathElem.Value = PathHelper.ConvertToWindowsPath (pathToAsm);
+			hitPathElem.Value = PathHelper.ConvertToWindowsPath (asmRef.NativePath);
+
+			var trash = localReference.Elements ().Where (e => e.Name != HintPathXName);
+			foreach (var item in trash)
+				item.Remove ();
 		}
 
 		void AddLocalReference(AssemblyReference settings)
