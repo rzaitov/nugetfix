@@ -49,6 +49,7 @@
     <Compile Include="Domain\PackageInfo.cs" />
     <Compile Include="Domain\Project.cs" />
     <Compile Include="Domain\AssemblyReference.cs" />
+    <Compile Include="Domain\ImportReference.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

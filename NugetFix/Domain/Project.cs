@@ -15,8 +15,11 @@ namespace NugetFix
 		static readonly XName ReferenceXName = XName.Get ("Reference", ns);
 		static readonly XName HintPathXName = XName.Get ("HintPath", ns);
 		static readonly XName ItemGroupXName = XName.Get ("ItemGroup", ns);
+		static readonly XName ImportXName = XName.Get ("Import", ns);
 
 		static readonly XName IncludeXName = XName.Get ("Include");
+		static readonly XName ProjectXName = XName.Get ("Project");
+		static readonly XName ConditionXName = XName.Get ("Condition");
 
 		readonly XDocument xcsproj;
 		readonly string csproj;
@@ -42,6 +45,8 @@ namespace NugetFix
 			this.csproj = csproj;
 			xcsproj = XDocument.Load (csproj);
 		}
+
+		#region References
 
 		public void AddReference(AssemblyReference settings)
 		{
@@ -110,6 +115,79 @@ namespace NugetFix
 
 			ItemGroupWithReferences.Add (reference);
 		}
+
+		#endregion
+
+		#region Import
+
+		public void RemoveImportByName(ImportReference reference)
+		{
+			var importToRemove = FindImportByName (reference.Name);
+			if (importToRemove != null)
+				importToRemove.Remove ();
+		}
+
+		public void RemoveImportByPath(ImportReference reference)
+		{
+			XElement importToRemove = FindImportByPath (reference.Path);
+			if (importToRemove != null)
+				importToRemove.Remove ();
+		}
+
+		public void UpsertImport(ImportReference reference)
+		{
+			var importToUpdate = FindImportByName (reference.Name);
+			if (importToUpdate != null)
+				UpdateImport (importToUpdate, reference);
+			else
+				AddImport (reference);
+		}
+
+		XElement FindImportByName(string importFileName)
+		{
+			IEnumerable<XElement> imports = xcsproj.Root.Elements (ImportXName);
+			var result = imports.Where (i => i.Attribute (ProjectXName).Value.EndsWith (importFileName));
+			return result.FirstOrDefault ();
+		}
+
+		XElement FindImportByPath(string path)
+		{
+			var imports = xcsproj.Root.Elements (ImportXName);
+			var result = imports.Where (i => i.Attribute (ProjectXName).Value == path);
+			return result.FirstOrDefault ();
+		}
+
+		public void AddImport(ImportReference reference)
+		{
+			var importElement = new XElement (ImportXName);
+			importElement.Add (new XAttribute (ProjectXName, reference.Path));
+
+			if (reference.Condition != null)
+				importElement.Add (BuildCondition(reference));
+
+			xcsproj.Root.Add (importElement);
+		}
+
+		void UpdateImport(XElement importElement, ImportReference reference)
+		{
+			var project = importElement.Attribute (ProjectXName);
+			project.Value = reference.PathWindows;
+
+			var condition = importElement.Attribute (ConditionXName);
+			if (condition != null && reference.Condition == null)
+				condition.Remove ();
+			else if (condition != null && reference.Condition != null)
+				condition.Value = reference.Condition;
+			else if (condition == null && reference.Condition != null)
+				importElement.Add (BuildCondition (reference));
+		}
+
+		XAttribute BuildCondition(ImportReference reference)
+		{
+			return new XAttribute (ConditionXName, reference.Condition);
+		}
+
+		#endregion
 
 		public void Save()
 		{

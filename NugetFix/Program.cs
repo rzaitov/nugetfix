@@ -16,8 +16,10 @@ namespace NugetFix
 			string csproj = "/Users/rzaitov/Documents//Apps/A_Xamarin/xamarin-forms-book-preview/Chapter02/TwoButtons/TwoButtons/TwoButtons.Android/TwoButtons.Android.csproj";
 			var project = new Project (csproj);
 
-			project.UpsertLocalReference (AssemblyReference.CreateFromPath ("..\\..\\packages\\Xamarin.AAA.Support.v13.20.0.0.4\\libAAA\\MonoAndroidAAA\\Xamarin.Android.Support.v16.dll" ));
-			project.DeleteAssemblyReference (AssemblyReference.CreateFromPath ("Xamarin.Forms.Core.dll"));
+//			project.UpsertLocalReference (AssemblyReference.CreateFromPath ("..\\..\\packages\\Xamarin.AAA.Support.v13.20.0.0.4\\libAAA\\MonoAndroidAAA\\Xamarin.Android.Support.v16.dll" ));
+//			project.DeleteAssemblyReference (AssemblyReference.CreateFromPath ("Xamarin.Forms.Core.dll"));
+			string path = "..\\..\\packages\\Xamarin.Forms.1.2.3.6257\\build\\portable-win+net45+wp80+MonoAndroid10+MonoTouch10\\Xamarin.Forms.targets";
+			project.RemoveImportByPath (new ImportReference { Path = path, Condition = string.Format("Exists('{0}')", path) });
 			project.Save ();
 
 			/*
