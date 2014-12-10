@@ -69,15 +69,11 @@ namespace NugetFix
 
 		void PatchProject(Project project, PatchDescription patch)
 		{
-			foreach (var p in patch.Commands) {
+			foreach (Command p in patch.Commands) {
 				switch (p.CommandType) {
 					case CommandType.Update:
 						if (p.Path.EndsWith (".targets")) {
-							var importReference = new ImportReference {
-								Path = p.Path,
-								Condition = string.Format ("Exists('{0}')", p.Path)
-							};
-							project.UpsertImport (importReference);
+							PatchTargets (project, p);
 						} else {
 							project.UpsertLocalReference (AssemblyReference.CreateFromPath (p.Path));
 						}
@@ -96,6 +92,23 @@ namespace NugetFix
 						throw new NotImplementedException ();
 				}
 			}
+
+			RemoveRedundantTarget (project);
+		}
+
+		void PatchTargets(Project project, Command cmd)
+		{
+			var importReference = new ImportReference {
+				Path = cmd.Path,
+				Condition = string.Format ("Exists('{0}')", cmd.Path)
+			};
+			project.UpsertImport (importReference);
+		}
+
+		void RemoveRedundantTarget(Project project)
+		{
+			// we should remove this tag. Explanation http://docs.nuget.org/docs/workflows/migrating-to-automatic-package-restore
+			project.RemoveTargetByName ("EnsureNuGetPackageBuildImports");
 		}
 
 		void PatchPackage(Package package, PatchDescription patch)

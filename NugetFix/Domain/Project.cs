@@ -17,11 +17,12 @@ namespace NugetFix
 		static readonly XName ItemGroupXName = XName.Get ("ItemGroup", ns);
 		static readonly XName ImportXName = XName.Get ("Import", ns);
 		static readonly XName ProjectTypeGuidsXName = XName.Get ("ProjectTypeGuids", ns);
+		static readonly XName TargetXName = XName.Get ("Target", ns);
 
 		static readonly XName IncludeXName = XName.Get ("Include");
 		static readonly XName ProjectXName = XName.Get ("Project");
 		static readonly XName ConditionXName = XName.Get ("Condition");
-
+		static readonly XName NameXName = XName.Get("Name");
 
 		XElement itemGroupWithReferences;
 		XElement ItemGroupWithReferences {
@@ -199,6 +200,17 @@ namespace NugetFix
 		{
 			var projectGuildElement = Document.Root.Descendants (ProjectTypeGuidsXName).First ();
 			return projectGuildElement.Value;
+		}
+
+		#endregion
+
+		#region Target
+
+		public void RemoveTargetByName(string name)
+		{
+			var targets = Document.Root.Elements (TargetXName).Where (t => t.Attribute (NameXName).Value == name);
+			foreach (var t in targets)
+				t.Remove ();
 		}
 
 		#endregion
