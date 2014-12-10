@@ -1,14 +1,14 @@
-nugetfix
+Nugetfix
 ========
-This util will update packages within iOS/Android/Wp/Pcl projects for you. You will find it convinient if you need update lots of project from command line.
-This is not a replacement for Nuget.exe application. This means that util will not manage package's dependency for you. You must explicitly specify which package should be removed and which should be added.
-Also `nugetfix` will not restore packages for you, it just update `csproj` file and `packages.config` properly.
+Nugetfix was initially designed to update packages in `iOS/Android/WP/PCL` projects. Use it if you need to update packages in lots of projects with a single command. This tool just updates `*.csproj` and `packages.config` files from command line. It means that it can't be used as replacement for Nuget.exe or as nuget package manager. You must explicitly declare packages you want to be removed or added.
 
 Instructions
 ------------
 
-First of all you need understand what you want, then you need translate you wish to `nugetfix`. This means you must specify fix steps to `nugetfix` these steps than will be applied to your project.
-Describe fix steps within text file (e.x. `fix.steps`) with simple syntax. `fix.steps` file should contains steps for `csproj` file and for `package.config` files. Here an example. Let's imagine you need to update `Xamarin.Forms` project to version `1.3`:  
+* First of all you need to realize what packages you want to update, then you need to describe your wish to `nugetfix`. By saying this I mean that you should specify fix steps for `nugetfix`(these steps will be applied to your project).
+* Write fix steps in text file (e.x. `fix.steps`) using simple syntax. `fix.steps` file should contain steps for `*.csproj` and for `package.config` files.
+
+For instance, you want to update `Xamarin.Forms 1.2` project to utilize `Xamarin.Forms 1.3`:
 
 ````bash
 [ios csproj]
@@ -19,16 +19,16 @@ update "Xamarin.Forms.1.3\build\portable-win+net45+wp80+Xamarin.iOS10\Xamarin.Fo
 update "Xamarin.Forms" version="1.3" targetFramework="xamarinios10"
 ```
 
-This file contains instuctions for updating csproj file for iOS app and instuctions for patching packages.config file which locates in csproj's file folder.
-In csproj file you can fix assembly references and targets files.
+This file contains instuctions for updating csproj file of iOS app and instuctions for patching packages.config.
+In csproj file it's possible to change assembly references and targets.
 In packages.config you can fix any package.
 You will find explanation below.
 
 
-The typical `fix.steps` file for some cross-platform project will looks like this:
+Typical `fix.steps` file for random cross-platform project will look like this:
 ````bash
 [ios csproj]
-# here you should put migration steps for your iPhoneApp.csproj
+# here you should put migration steps for your iOSApp.csproj
 
 [ios packages.config]
 # here you should put migration steps for package.config file
@@ -46,9 +46,9 @@ The typical `fix.steps` file for some cross-platform project will looks like thi
 # here you should put migration steps for package.config file
 ````
 
-fix.steps syntax
+fix.steps outline and syntax
 ----------------
-Any step starts with either `update` or `delete` work:  
+Every step starts with `update` or `delete` instruction:
 ```bash
 update "path/to/new/version/assembly.dll" # specify path to new assembly version
 update "path/to/new.targets"
@@ -61,21 +61,23 @@ update "packageId" version="newVersionString" targetFramework="specifyFrameworkH
 delete "packageId"
 ```
 
-Here you can browse real-life fix.step file
+Here you can browse real-life [fix.step](https://github.com/rzaitov/nugetfix/blob/master/NugetFix/fix.steps) file
 
-where get migration steps ?
----------------------------
-You can migrate some project manually (via XS or VS) and then browse what were changes. Based on this you can build your own `fix.steps` file.
+How to get migration steps
+--------------------------
+You can migrate some project manually (via XS or VS) and then browse what was changed. Based on this you can build your own `fix.steps` file.
 
 How to run
 ----------
-Build the util. Create your `fix.steps` file. Run from command line:  
+* Build NugetFix project with XS or VS
+* Create `fix.steps` file
+* Run from command line
 ````bash
 cd path/to/your/repository
 mono path/to/NugetFix.exe paht/to/SolutionFile.sln  path/to/fix.steps
 ```
 
-You can run `nugetfix` on multiple projects via `xarg` util:  
+You can run `nugetfix` on multiple projects with `xarg` util:
 ```bash
 find . -name "*sln" -type f -print0 | xargs -0 -L 1 -J {} mono path/to/Nuget.exe {} path/to/fix.steps
 ```
